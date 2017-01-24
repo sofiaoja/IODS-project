@@ -1,4 +1,23 @@
 
 # About the project
 
-*Write a short description about the course and add a link to your github repository here. This is an R markdown (.Rmd) file so you can use R markdown syntax. See the 'Useful links' page in the mooc area (chapter 1) for instructions.*
+<!-- *Write a short description about the course and add a link to your github repository here. This is an R markdown (.Rmd) file so you can use R markdown syntax. See the 'Useful links' page in the mooc area (chapter 1) for instructions.* -->
+
+```{r}
+
+"This is open source data science exercise with R Markdown"
+
+print("This is open source data science exercise with R Markdown")
+
+"During this course we use open data sets from different sources and learn to prepare them for different analyses. You will explore, analyse and interpret data from real world applications"
+
+https://github.com/sofiaoja/IODS-project
+
+```
+<!-- # [link](http://areena.yle.fi/tv) -->
+<!-- # http:www.areena.yle.fi/tv -->
+<!-- # https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet -->
+<!-- # [I'm an inline-style link](https://www.google.com) -->
+
+
+
