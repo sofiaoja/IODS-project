@@ -11,6 +11,7 @@ print("This is open source data science exercise with R Markdown")
 
 "During this course we use open data sets from different sources and learn to prepare them for different analyses. You will explore, analyse and interpret data from real world applications"
 
+#miksi tämä linkki antaa virheilmoituksen?
 https://github.com/sofiaoja/IODS-project
 
 ```
