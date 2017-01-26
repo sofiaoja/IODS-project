@@ -5,5 +5,5 @@
 
 "In this course we will learn to understand the principles and advantages of using open research tools with open data and understand the possibilities of reproducible research."
 
-[I'm an inline-style link] (https://sofiaoja.github.io/IODS-project/)
+<I'm an inline-style link> (https://sofiaoja.github.io/IODS-project/)
 
