@@ -1,5 +1,5 @@
 ---
-title: "New RMarkdown file"
+title: "New RMarkdown file_created 260117"
 author: "Sofia"
 date: "25 tammikuuta 2017"
 output: html_document
@@ -7,4 +7,4 @@ output: html_document
 
 "In this course we will learn to understand the principles and advantages of using open research tools with open data and understand the possibilities of reproducible research."
 
-I'm an inline-style link https://sofiaoja.github.io/IODS-project/
+<I'm an inline-style link> https://sofiaoja.github.io/IODS-project/
