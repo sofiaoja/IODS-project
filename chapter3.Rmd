@@ -1,0 +1,106 @@
+# RStudio Exercise 3
+
+*This week I have learned Logistic Regression.*
+
+- Data was preprocessed for further analysis using logistic regression model and results were interpreted.
+
+```{r}
+
+# Sofia 100217 Logistic Regression excercise
+# title: RStudio Exercise 3 RMarkdown file for Analysis created 100117
+# author: Sofia Oja
+# date: 10 helmikuuta 2017
+
+# set working directory
+setwd("~/GitHub/IODS-project")
+
+# read CSV into R
+alcjoined <- read.csv(file="Data/alcjoinedmodified.csv", header=TRUE, sep=";")
+
+# stucture of the new dataset
+# 'data.frame':	382 obs. of  36 variables:
+str(alcjoined)
+
+# dimension of the new dataset
+# [1] 382  36
+dim(alcjoined)
+
+# colnames of the new dataset
+# [1] "X"          "school"     "sex"        "age"        "address"   
+# [6] "famsize"    "Pstatus"    "Medu"       "Fedu"       "Mjob"      
+# [11] "Fjob"       "reason"     "nursery"    "internet"   "guardian"  
+# [16] "traveltime" "studytime"  "failures"   "schoolsup"  "famsup"    
+# [21] "paid"       "activities" "higher"     "romantic"   "famrel"    
+# [26] "freetime"   "goout"      "Dalc"       "Walc"       "health"    
+# [31] "absences"   "G1"         "G2"         "G3"         "alc_use"   
+# [36] "high_use"  
+colnames(alcjoined)
+
+# For parameters absences, sex, failures and freetime have to my hypothesis relationships with alcohol consumption.
+
+# access the tidyverse libraries tidyr, dplyr, ggplot2
+library(tidyr); library(dplyr); library(ggplot2)
+
+# draw a bar plot of each variable
+gather(alcjoined) %>% ggplot(aes(value)) + facet_wrap("key", scales = "free") + geom_bar()
+
+library(ggplot2)
+
+# initialise a plot of high_use and absences
+g1 <- ggplot(alcjoined, aes(x = high_use, y = absences, col = sex))
+
+# define the plot as a boxplot and draw it
+g1 + geom_boxplot() + ggtitle("Student absences by alcohol consumption and sex")
+
+# find the model with glm()
+m <- glm(high_use ~ failures + absences + sex + freetime, data = alcjoined, family = "binomial")
+
+# print out a summary of the model
+m
+
+# print out the coefficients and summary  of the model
+#Coefficients:
+#            Estimate Std. Error z value Pr(>|z|)    
+#(Intercept) -2.75479    0.46053  -5.982 2.21e-09 ***
+#failures     0.43004    0.19312   2.227 0.025961 *  
+#absences     0.09461    0.02280   4.150 3.33e-05 ***
+#sexM         0.84223    0.24705   3.409 0.000652 ***
+#freetime     0.27453    0.12543   2.189 0.028621 * 
+# For parameters absences and sex have very high significance ***, also failures and freetime are significant *.
+coef(m)
+summary(m)
+
+# compute odds ratios (OR)
+OR <- coef(m) %>% exp
+
+# compute confidence intervals (CI)
+CI <- confint(m) %>% exp
+
+# print out the odds ratios with their confidence intervals
+cbind(OR, CI)
+
+# predict() the probability of high_use
+probabilities <- predict(m, type = "response")
+
+# add the predicted probabilities to 'alc'
+alcjoined <- mutate(alcjoined, probability = probabilities)
+
+# use the probabilities to make a prediction of high_use
+alcjoined <- mutate(alcjoined, prediction = probability > 0.5)
+
+# tabulate the target variable versus the predictions
+table(high_use = alcjoined$high_use, prediction = alcjoined$prediction)
+
+# access dplyr and ggplot2
+library(dplyr); library(ggplot2)
+
+# initialize a plot of 'high_use' versus 'probability' in 'alc'
+g <- ggplot(alcjoined, aes(x = probability, y = high_use, col = prediction))
+
+# define the geom as points and draw the plot
+g + geom_point()
+
+# tabulate the target variable versus the predictions
+table(high_use = alcjoined$high_use, prediction = alcjoined$prediction) %>% prop.table() %>% addmargins()
+
+```
