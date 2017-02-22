@@ -1,0 +1,147 @@
+# RStudio Exercise 5
+
+*This week I have learned Dimensionality Reduction Techniques.*
+
+- Data was loaded for further analysis using dimensionality reduction techniques and results were interpreted.
+
+```{r}
+
+# load the data
+
+# read CSV into R
+human_ <- read.csv(file="http://s3.amazonaws.com/assets.datacamp.com/production/course_2218/datasets/human2.txt", header=TRUE, sep=",")
+
+# explore the human dataset
+# human data: 155 obs. of  8 variables
+# The data combines several indicators from most countries in the world
+# "Country" = Country name
+# # Health and knowledge
+# "GNI" = Gross National Income per capita
+# "Life.Exp" = Life expectancy at birth
+# "Edu.Exp" = Expected years of schooling 
+# "Mat.Mor" = Maternal mortality ratio
+# "Ado.Birth" = Adolescent birth rate
+# # Empowerment
+# "Parli.F" = Percetange of female representatives in parliament
+# "Edu2.F" = Proportion of females with at least secondary education
+# "Edu2.M" = Proportion of males with at least secondary education
+# "Labo.F" = Proportion of females in the labour force
+# "Labo.M" " Proportion of males in the labour force
+# "Edu2.FM" = Edu2.F / Edu2.M
+# "Labo.FM" = Labo2.F / Labo2.M
+str(human_)
+dim(human_)
+summary(human_)
+
+# Access tidyr, dplyr, GGally, corrplot
+library(tidyr); library(dplyr); library(GGally); library(corrplot)
+
+# visualize the 'human_' variables
+# Edu.Exp is most normally distributed of the variables.
+ggpairs(human_)
+
+# compute the correlation matrix and visualize it with corrplot
+# Strong positive correlation with Edu.Exp vs. Life.Exp variables, also strong positive correlation with Mat.Mor vs. Ado.Birth variables. Strong negative correlation with Mat.Mor vs. Life.Exp variables.
+cor(human_) %>% corrplot()
+
+# principal component analysis (PCA) on the not standardized human data
+
+# perform principal component analysis (with the SVD method)
+pca_human <- prcomp(human_)
+
+# draw a biplot of the principal component representation and the original variables
+biplot(pca_human, choices = 1:2, cex = c(0.8, 1), col = c("grey40", "deeppink2"))
+
+# create and print out a summary of pca_human
+s <- summary(pca_human)
+
+# rounded percetanges of variance captured by each PC
+pca_pr <- round(100*s$importance[2, ], digits = 1)
+
+# print out the percentages of variance
+pca_pr
+s
+
+# create object pc_lab to be used as axis labels
+pc_lab <- paste0(names(pca_pr), " (", pca_pr, "%)")
+
+# draw a biplot
+biplot(pca_human, cex = c(0.8, 1), col = c("grey40", "deeppink2"), xlab = pc_lab[1], ylab = pc_lab[2])
+
+# principal component analysis (PCA) for standardized human data
+
+# standardize the variables
+human_std <- scale(human_)
+
+# perform principal component analysis (with the SVD method)
+pca_human <- prcomp(human_std)
+
+# draw a biplot of the principal component representation and the original variables
+biplot(pca_human, choices = 1:2, cex = c(0.8, 1), col = c("grey40", "deeppink2"))
+
+# create and print out a summary of pca_human
+s <- summary(pca_human)
+
+# rounded percetanges of variance captured by each PC
+pca_pr <- round(100*s$importance[2, ], digits = 1)
+
+# print out the percentages of variance
+pca_pr
+s
+
+# create object pc_lab to be used as axis labels
+pc_lab <- paste0(names(pca_pr), " (", pca_pr, "%)")
+
+# draw a biplot
+# Results about the same for both standardized and not standardized human data.
+# PC1 positive components are health and knowledge variables: Mat.Mor and Ado.Birth
+# PC1 negative components are health and knowledge variables: Edu.Exp and Life.Exp
+# PC2 positive components are empowerment variables: Labo.FM and Parli.F
+
+biplot(pca_human, cex = c(0.8, 1), col = c("grey40", "deeppink2"), xlab = pc_lab[1], ylab = pc_lab[2])
+
+# access the FactoMineR package
+library(FactoMineR)
+
+# load the data
+data("tea")
+
+# explore the dataset
+# 300 obs. of  36 variables
+str(tea)
+dim(tea)
+summary(tea)
+
+# column names to keep in the dataset
+keep_columns <- c("Tea", "How", "how", "sugar", "where", "lunch")
+
+# select the 'keep_columns' to create a new dataset
+tea_time <- select(tea, one_of(keep_columns))
+
+# look at the summaries and structure of the data
+summary(tea_time)
+str(tea_time)
+
+# Access ggplot2
+library(ggplot2)
+
+# visualize the dataset
+gather(tea_time) %>% ggplot(aes(value)) + geom_bar() + theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8)) + facet_wrap("key", scales = "free")
+
+# multiple correspondence analysis
+mca <- MCA(tea_time, graph = FALSE)
+
+# summary of the model
+summary(mca)
+
+# visualize MCA
+plot(mca, invisible=c("ind"), habillage = "quali")
+
+# draw a biplot
+#biplot(mca, cex = c(0.8, 1), col = c("grey40", "deeppink2"), xlab = NA, ylab = NA)
+
+# draw a biplot of the principal component representation and the original variables
+#biplot(mca, choices = 1:2, cex = c(0.8, 1), col = c("grey40", "deeppink2"))
+
+```
+

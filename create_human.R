@@ -64,3 +64,66 @@ setwd("~/GitHub/IODS-project")
 
 # write CSV in R
 write.csv2(human, file = "data/human.csv")
+
+# Sofia 210217 RStudio Exercise 5: Dimensionality Reduction Techniques excercise
+# title: Continue with R script file for Data Wrangling created 210217
+# author: Sofia Oja
+# date: 21 helmikuuta 2017
+
+# read CSV into R
+human <- read.csv(file="http://s3.amazonaws.com/assets.datacamp.com/production/course_2218/datasets/human1.txt", header=TRUE, sep=",")
+
+# explore the human dataset
+# human data: 195 obs. of  19 variables
+str(human)
+dim(human)
+summary(human)
+
+# mutate GNI to numeric
+human$GNI <- as.numeric(sub(",", ".", human$GNI, fixed = TRUE))
+
+# columns to keep
+keep <- c("Country", "Edu2.FM", "Labo.FM", "Life.Exp", "Edu.Exp", "GNI", "Mat.Mor", "Ado.Birth", "Parli.F")
+
+# select the 'keep' columns
+human <- select(human, one_of(keep))
+
+# print out a completeness indicator of the 'human' data
+complete.cases(human)
+
+# print out the data along with a completeness indicator as the last column
+data.frame(human[-1], comp = complete.cases(human))
+
+# filter out all rows with NA values
+human_comp = data.frame(human[-1], comp = complete.cases(human))
+human_ <- filter(human, human_comp$comp == TRUE)
+
+# define the last indice we want to keep
+last <- nrow(human_) - 7
+
+# choose everything until the last 7 observations
+human_ <- human_[1:last, ]
+
+# add countries as rownames
+rownames(human_) <- human_$Country
+
+# remove the Country variable
+human_ <- select(human_, -Country)
+
+# explore the human dataset
+# human data: 155 obs. of  8 variables
+str(human_)
+dim(human_)
+
+setwd("~/GitHub/IODS-project")
+
+# write CSV in R
+write.csv2(human_, file = "data/human2.csv")
+
+# read CSV into R
+#human_ <- read.csv(file="http://s3.amazonaws.com/assets.datacamp.com/production/course_2218/datasets/human2.txt", header=TRUE, sep=",")
+
+# explore the human dataset
+# human data: 155 obs. of  8 variables
+#str(human_)
+#dim(human_)
